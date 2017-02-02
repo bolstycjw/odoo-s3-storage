@@ -1,0 +1,59 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="s3-storage.list">
+      <field name="name">s3-storage list</field>
+      <field name="model">s3-storage.s3-storage</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="s3-storage.action_window">
+      <field name="name">s3-storage window</field>
+      <field name="res_model">s3-storage.s3-storage</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="s3-storage.action_server">
+      <field name="name">s3-storage server</field>
+      <field name="model_id" ref="model_s3-storage_s3-storage"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="s3-storage" id="s3-storage.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="s3-storage.menu_1" parent="s3-storage.menu_root"/>
+    <menuitem name="Menu 2" id="s3-storage.menu_2" parent="s3-storage.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="s3-storage.menu_1_list" parent="s3-storage.menu_1"
+              action="s3-storage.action_window"/>
+    <menuitem name="Server to list" id="s3-storage" parent="s3-storage.menu_2"
+              action="s3-storage.action_server"/>
+    -->
+  </data>
+</odoo>
