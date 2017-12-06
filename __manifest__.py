@@ -1,39 +1,33 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "s3-storage",
+    'name': "odoo-s3",
 
     'summary': """
-        Allows you to use an AWS S3 bucket for file storage""",
+        Stores attachments in Amazon S3 instead of the local drive""",
 
     'description': """
-        Binary files such as attachments and pictures are stored by default
-        in the file system of the host running Odoo. In some cases you may
-        want to decrease the overall response time by delegating static file
-        storage to a specialized instance such as an S3 bucket.
-        This module allows you to configure Odoo so that an S3 bucket is
-        used instead of the file system for binary files storage.
+        In large deployments, Odoo workers need to share a distributed 
+        filestore. Amazon S3 can store files (e.g. attachments and 
+        pictures), such that all Odoo workers can access the same files.
+
+        This module lets you configure access to an S3 bucket from Odoo,
+        by settings a System parameter.
     """,
 
-    'author': "brolycjw",
-    'website': "http://primetechnologies.com.sg/",
+    'author': "Marc Lijour",
+    'website': "https://github.com/marclijour/odoo-s3",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Uncategorized',
+    'category': 'Technical Settings',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
 
-    # always loaded
-    'data': [
+    # only the admin user should be having access
+#    'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+#    ],
 }

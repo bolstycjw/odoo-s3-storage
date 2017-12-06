@@ -5,15 +5,16 @@
 
     Use s3 as file storage mechanism
 
-    :copyright: (c) 2017 by brolycjw.
+    :copyright: (c) 2017 by Marc Lijour, brolycjw.
     :license: MIT License, see LICENSE for more details.
 """
 
 import hashlib
+import base64
 
 from odoo import models
 
-import s3_helper
+from . import s3_helper
 
 
 class S3Attachment(models.Model):
@@ -37,7 +38,7 @@ class S3Attachment(models.Model):
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
             file_exists = s3_helper.object_exists(s3, s3_bucket.name, fname)
             if not file_exists:
-                # Some old files (prior to the installation of odoo-S3) may
+                # Some old files (prior to the installation of odoo-s3) may
                 # still be stored in the file system even though
                 # ir_attachment.location is configured to use S3
                 try:
@@ -58,10 +59,11 @@ class S3Attachment(models.Model):
             access_key_id, secret_key, bucket_name = s3_helper.parse_bucket_url(storage)
             s3 = s3_helper.get_resource(access_key_id, secret_key)
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
-            bin_value = value.decode('base64')
+            bin_value = base64.b64decode(value)
             fname = hashlib.sha1(bin_value).hexdigest()
             s3.Object(s3_bucket.name, fname).put(Body=bin_value)
         else:
             fname = super(S3Attachment, self)._file_write(value, checksum)
 
         return fname
+

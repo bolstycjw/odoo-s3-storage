@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import boto3
@@ -53,3 +53,4 @@ def get_resource(access_key_id, secret_key):
     session = boto3.Session(access_key_id, secret_key)
     s3 = session.resource('s3')
     return s3
+
