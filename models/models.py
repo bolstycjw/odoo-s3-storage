@@ -33,7 +33,7 @@ class S3Attachment(models.Model):
     def _file_read(self, fname, bin_size=False):
         storage = self._storage()
         if storage[:5] == 's3://':
-            access_key_id, secret_key, bucket_name = s3_helper.parse_bucket_url(storage)
+            access_key_id, secret_key, bucket_name, encryption_enabled = s3_helper.parse_bucket_url(storage)
             s3 = s3_helper.get_resource(access_key_id, secret_key)
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
             file_exists = s3_helper.object_exists(s3, s3_bucket.name, fname)
@@ -48,7 +48,7 @@ class S3Attachment(models.Model):
                     return False
             else:
                 s3_key = s3.Object(s3_bucket.name, fname)
-                read = s3_key.get()['Body'].read().encode('base64')
+                read = base64.b64encode(s3_key.get()['Body'].read())
         else:
             read = super(S3Attachment, self)._file_read(fname, bin_size=False)
         return read
@@ -56,13 +56,17 @@ class S3Attachment(models.Model):
     def _file_write(self, value, checksum):
         storage = self._storage()
         if storage[:5] == 's3://':
-            access_key_id, secret_key, bucket_name = s3_helper.parse_bucket_url(storage)
+            access_key_id, secret_key, bucket_name, encryption_enabled = s3_helper.parse_bucket_url(storage)
             s3 = s3_helper.get_resource(access_key_id, secret_key)
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
             bin_value = base64.b64decode(value)
             fname = hashlib.sha1(bin_value).hexdigest()
-            s3.Object(s3_bucket.name, fname).put(Body=bin_value)
-        else:
+            if encryption_enabled:
+                s3.Object(s3_bucket.name, fname).put(Body=bin_value, ServerSideEncryption='AES256')
+            else:
+                s3.Object(s3_bucket.name, fname).put(Body=bin_value)
+
+        else: # falling back on Odoo's local filestore
             fname = super(S3Attachment, self)._file_write(value, checksum)
 
         return fname

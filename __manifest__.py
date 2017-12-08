@@ -6,8 +6,8 @@
         Stores attachments in Amazon S3 instead of the local drive""",
 
     'description': """
-        In large deployments, Odoo workers need to share a distributed 
-        filestore. Amazon S3 can store files (e.g. attachments and 
+        In large deployments, Odoo workers need to share a distributed
+        filestore. Amazon S3 can store files (e.g. attachments and
         pictures), such that all Odoo workers can access the same files.
 
         This module lets you configure access to an S3 bucket from Odoo,
@@ -26,7 +26,7 @@
     # any module necessary for this one to work correctly
     'depends': ['base'],
 
-    # only the admin user should be having access
+    # only the admin user should be having access -so default is ok
 #    'data': [
         # 'security/ir.model.access.csv',
 #    ],

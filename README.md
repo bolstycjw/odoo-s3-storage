@@ -18,8 +18,14 @@ This module is compatible with **Odoo 11** and **Python 3**. For older versions,
 ## Configuration
 In order to use `odoo-s3` you will need to switch to "Developer mode" and define a new system parameter as follows:
 
+* without encryption:
 ```
 ir_attachment.location  --->  s3://<Your-AWS-Access-Key-ID>:<Your-AWS-Secret-Key>@<Your-S3-Bucket-name>
+
+```
+* with server-side encryption (only AES256, since [aws:kms is not supported in boto3](https://github.com/boto/botocore/issues/471)):
+```
+ir_attachment.location  --->  s3://<Your-AWS-Access-Key-ID>:<Your-AWS-Secret-Key>@<Your-S3-Bucket-name>+SSE
 
 ```
 
