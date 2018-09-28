@@ -31,6 +31,8 @@ def parse_bucket_url(bucket_url):
         remain = bucket_url.lstrip(scheme)
         access_key_id = remain.split(':')[0]
         remain = remain.lstrip(access_key_id).lstrip(':')
+        do_space_url = remain.split('&')[1]
+        remain = remain.rstrip(do_space_url).rstrip('&')
         secret_key = remain.split('@')[0]
         remain = remain.lstrip(secret_key).lstrip('@').split('+')
         bucket_name = remain[0]
@@ -44,7 +46,7 @@ def parse_bucket_url(bucket_url):
     except Exception:
         raise Exception("Unable to parse the S3 bucket url.")
 
-    return (access_key_id, secret_key, bucket_name, encryption_enabled)
+    return (access_key_id, secret_key, bucket_name, do_space_url)
 
 
 def bucket_exists(s3, bucket_name):
@@ -69,9 +71,9 @@ def object_exists(s3, bucket_name, key):
     return exists
 
 
-def get_resource(access_key_id, secret_key):
-    session = Session(access_key_id, secret_key)
-    s3 = session.resource('s3')
+def get_resource(access_key_id, secret_key, endpoint_url):
+    session = boto3.Session(access_key_id, secret_key)
+    s3 = session.resource('s3', endpoint_url='https://' + endpoint_url)
     return s3
 
 # extra: works for files stored in the file system

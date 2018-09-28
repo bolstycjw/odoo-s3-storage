@@ -3,19 +3,19 @@
     'name': "odoo-s3",
 
     'summary': """
-        Stores attachments in Amazon S3 instead of the local drive""",
+        Allows you to use a DigitalOcean Spaces bucket for file storage""",
 
     'description': """
-        In large deployments, Odoo workers need to share a distributed
-        filestore. Amazon S3 can store files (e.g. attachments and
-        pictures), such that all Odoo workers can access the same files.
-
-        This module lets you configure access to an S3 bucket from Odoo,
-        by settings a System parameter.
+        Binary files such as attachments and pictures are stored by default
+        in the file system of the host running Odoo. In some cases you may
+        want to decrease the overall response time by delegating static file
+        storage to a specialized instance such as an DigitalOcean Spaces bucket.
+        This module allows you to configure Odoo so that an DigitalOcean Spaces bucket is
+        used instead of the file system for binary files storage.
     """,
 
-    'author': "Marc Lijour",
-    'website': "https://github.com/marclijour/odoo-s3",
+    'author': "brolycjw, hp-bkeys",
+    'website': "http://primetechnologies.com.sg/, https://homeprotech.com/",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
