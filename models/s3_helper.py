@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/env python3
 """
     s3_helper.py
     ~~~~~~~~~~~~~~~~~
@@ -12,7 +10,7 @@
 
 import boto3
 # uncomment for debug mode:
-#boto3.set_stream_logger('')
+# boto3.set_stream_logger('')
 import botocore
 from boto3.session import Session
 from boto3.s3.transfer import S3Transfer
@@ -23,7 +21,7 @@ def parse_bucket_url(bucket_url):
         "Expecting an s3:// scheme, got {} instead.".format(scheme)
 
     # scheme:
-    # s3://<Your-AWS-Access-Key-ID>:<Your-AWS-Secret-Key>@<Your-S3-Bucket-name>+SSE
+    # s3://<Your-AWS-Access-Key-ID>:<Your-AWS-Secret-Key>@<Your-S3-Bucket-name>&<Your-DigitalOcean-base-url>+SSE
     # where +SSE is optional (meaning server-side encryption enabled)
 
     try:
@@ -31,11 +29,11 @@ def parse_bucket_url(bucket_url):
         remain = bucket_url.lstrip(scheme)
         access_key_id = remain.split(':')[0]
         remain = remain.lstrip(access_key_id).lstrip(':')
-        do_space_url = remain.split('&')[1]
-        remain = remain.rstrip(do_space_url).rstrip('&')
         secret_key = remain.split('@')[0]
-        remain = remain.lstrip(secret_key).lstrip('@').split('+')
-        bucket_name = remain[0]
+        remain = remain.lstrip(secret_key).lstrip('@')
+        bucket_name = remain.split('&')[0]
+        remain = remain.lstrip(bucket_name).lstrip('&').split('+')
+        do_space_url = remain[0]
         encryption_enabled = len(remain) > 1
 
         if not access_key_id or not secret_key:
@@ -46,7 +44,7 @@ def parse_bucket_url(bucket_url):
     except Exception:
         raise Exception("Unable to parse the S3 bucket url.")
 
-    return (access_key_id, secret_key, bucket_name, do_space_url)
+    return (access_key_id, secret_key, bucket_name, do_space_url, encryption_enabled)
 
 
 def bucket_exists(s3, bucket_name):
@@ -79,13 +77,13 @@ def get_resource(access_key_id, secret_key, endpoint_url):
 # extra: works for files stored in the file system
 # (not called by models.py which only deal with in-memory)
 def upload(value, storage):
-    access_key_id, secret_key, bucket_name, encryption_enabled = parse_bucket_url(storage)
+    access_key_id, secret_key, bucket_name, do_space_url, encryption_enabled = parse_bucket_url(storage)
     s3 = get_resource(access_key_id, secret_key)
     ### S3Transfer allows multi-part, call backs etc
     # http://boto3.readthedocs.io/en/latest/_modules/boto3/s3/transfer.html
     transfer = S3Transfer(s3.meta.client)
     if encryption_enabled:
-        transfer.upload_file(value, bucket_name, value, extra_args={'ServerSideEncryption': 'AES256'})
+        transfer.upload_file(value, bucket_name, do_space_url, value, extra_args={'ServerSideEncryption': 'AES256'})
     else:
-        transfer.upload_file(value, bucket_name, value)
+        transfer.upload_file(value, bucket_name,do_space_url, value)
 
