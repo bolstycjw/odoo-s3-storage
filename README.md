@@ -1,4 +1,4 @@
-# odoo-s3
+# Odoo S3 Storage
 
 ## Dependencies
 `Odoo-S3-Storage` uses [`boto3`](https://github.com/boto/boto3) to talk to DigitalOcean. You will need to install it on the host running Odoo.
@@ -16,7 +16,7 @@ git clone https://github.com/HP-bkeys/odoo-s3-storage.git
 This module is compatible with **Odoo 11** and **Python 3**. For older versions, you can refer to the original source code (see credits below).
 
 ## Configuration
-In order to use `odoo-s3` you will need to switch to "Developer mode" and define a new system parameter as follows:
+In order to use `Odoo-S3-Storage` you will need to switch to "Developer mode" and define a new system parameter as follows:
 
 * without encryption:
 ```
