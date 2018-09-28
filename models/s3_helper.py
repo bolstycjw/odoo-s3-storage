@@ -85,5 +85,4 @@ def upload(value, storage):
     if encryption_enabled:
         transfer.upload_file(value, bucket_name, do_space_url, value, extra_args={'ServerSideEncryption': 'AES256'})
     else:
-        transfer.upload_file(value, bucket_name,do_space_url, value)
-
+        transfer.upload_file(value, bucket_name, do_space_url, value)
