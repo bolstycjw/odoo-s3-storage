@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "odoo-s3",
+    'name': "S3 Storages",
 
     'summary': """
         Allows you to use a DigitalOcean Spaces bucket for file storage""",
@@ -25,9 +25,4 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
-
-    # only the admin user should be having access -so default is ok
-#    'data': [
-        # 'security/ir.model.access.csv',
-#    ],
 }
