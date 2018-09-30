@@ -32,8 +32,10 @@ class S3Attachment(models.Model):
     def _file_read(self, fname, bin_size=False):
         storage = self._storage()
         if storage[:5] == 's3://':
-            access_key_id, secret_key, bucket_name = s3_helper.parse_bucket_url(storage)
-            s3 = s3_helper.get_resource(access_key_id, secret_key)
+            access_key_id, secret_key, bucket_name, do_space_url = s3_helper.parse_bucket_url(
+                storage)
+            s3 = s3_helper.get_resource(
+                access_key_id, secret_key, do_space_url)
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
             file_exists = s3_helper.object_exists(s3, s3_bucket.name, fname)
             if not file_exists:
@@ -41,7 +43,8 @@ class S3Attachment(models.Model):
                 # still be stored in the file system even though
                 # ir_attachment.location is configured to use S3
                 try:
-                    read = super(S3Attachment, self)._file_read(fname, bin_size=False)
+                    read = super(S3Attachment, self)._file_read(
+                        fname, bin_size=False)
                 except Exception:
                     # Could not find the file in the file system either.
                     return False
@@ -55,8 +58,10 @@ class S3Attachment(models.Model):
     def _file_write(self, value, checksum):
         storage = self._storage()
         if storage[:5] == 's3://':
-            access_key_id, secret_key, bucket_name = s3_helper.parse_bucket_url(storage)
-            s3 = s3_helper.get_resource(access_key_id, secret_key)
+            access_key_id, secret_key, bucket_name, do_space_url = s3_helper.parse_bucket_url(
+                storage)
+            s3 = s3_helper.get_resource(
+                access_key_id, secret_key, do_space_url)
             s3_bucket = self._connect_to_S3_bucket(s3, bucket_name)
             bin_value = value.decode('base64')
             fname = hashlib.sha1(bin_value).hexdigest()
